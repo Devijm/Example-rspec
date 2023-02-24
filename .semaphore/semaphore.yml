@@ -1,0 +1,27 @@
+version: v1.0
+
+name: Ruby
+
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+
+blocks:
+  - name: bundle exec rspec
+    task:
+      jobs:
+        - name: Run tests
+          commands:
+            - checkout
+            - sem-version ruby 2.7.4
+            - bundle install --deployment --path vendor/bundle
+            - bundle exec rspec
+      epilogue:
+        always:
+          commands:
+            - curl -fsSL https://github.com/buildpulse/test-reporter/releases/latest/download/test-reporter-linux-amd64 > ./buildpulse-test-reporter
+            - chmod +x ./buildpulse-test-reporter
+            - ./buildpulse-test-reporter submit spec/reports --account-id 68192324 --repository-id 238705816 # Replace IDs with your BuildPulse account ID and repository ID
+      secrets:
+        - name: buildpulse-credentials

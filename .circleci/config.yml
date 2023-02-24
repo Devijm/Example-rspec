@@ -1,0 +1,27 @@
+version: 2.1
+
+orbs:
+  buildpulse: workshop64/buildpulse@0.4
+
+jobs:
+  build:
+    docker:
+      - image: cimg/ruby:2.7.4
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            gem install bundler -v2.1.4
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - run:
+          name: Run tests
+          command: bin/rspec
+
+      - buildpulse/upload:
+          path: spec/reports
+          account-id: 126138666 # Replace this value with your BuildPulse account ID
+          repository-id: 605417277 # Replace this value with your BuildPulse repository ID
