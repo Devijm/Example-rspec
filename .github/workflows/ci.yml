@@ -28,4 +28,4 @@ jobs:
         key: ${{ secrets.BUILDPULSE_ACCESS_KEY_ID }}
         secret: ${{ secrets.BUILDPULSE_SECRET_ACCESS_KEY }}
 
-        # Checking test runs
+        # checking after permission changes
